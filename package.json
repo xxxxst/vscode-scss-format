@@ -3,14 +3,14 @@
 	"displayName": "scss-format",
 	"publisher": "xxxxst",
 	"description": "format scss/css as single line",
-	"version": "0.0.2",
+	"version": "0.0.3",
 	"license": "MIT",
 	"icon": "doc/log128.png",
 	"homepage": "https://github.com/xxxxst/vscode-scss-format",
 	"repository": {
-        "type": "git",
-        "url": "https://github.com/xxxxst/vscode-scss-format"
-    },
+		"type": "git",
+		"url": "https://github.com/xxxxst/vscode-scss-format"
+	},
 	"engines": {
 		"vscode": "^1.40.0"
 	},
@@ -18,25 +18,30 @@
 		"Other"
 	],
 	"activationEvents": [
-        "onCommand:extension.scssFormat"
+		"onCommand:extension.scssFormat"
 	],
 	"main": "./out/extension.js",
 	"contributes": {
-		"commands": [{
-			"command": "extension.scssFormat",
-			"title": "format scss"
-		}],
-        "keybindings": [{
-			"command": "extension.scssFormat",
-			"key": "ctrl+j",
-			"mac": "cmd+j",
-			"when": "editorTextFocus"
-		}, {
-			"command": "extension.scssFormat",
-			"key": "ctrl+i",
-			"mac": "cmd+i",
-			"when": "editorTextFocus"
-		}]
+		"commands": [
+			{
+				"command": "extension.scssFormat",
+				"title": "format scss"
+			}
+		],
+		"keybindings": [
+			{
+				"command": "extension.scssFormat",
+				"key": "ctrl+j",
+				"mac": "cmd+j",
+				"when": "editorTextFocus"
+			},
+			{
+				"command": "extension.scssFormat",
+				"key": "ctrl+i",
+				"mac": "cmd+i",
+				"when": "editorTextFocus"
+			}
+		]
 	},
 	"scripts": {
 		"vscode:prepublish": "yarn run compile",
@@ -47,13 +52,13 @@
 		"test": "node ./out/test/runTest.js"
 	},
 	"devDependencies": {
-		"@types/vscode": "^1.40.0",
 		"@types/glob": "^7.1.1",
 		"@types/mocha": "^7.0.2",
 		"@types/node": "^13.11.0",
-		"eslint": "^6.8.0",
-		"@typescript-eslint/parser": "^2.30.0",
+		"@types/vscode": "1.40.0",
 		"@typescript-eslint/eslint-plugin": "^2.30.0",
+		"@typescript-eslint/parser": "^2.30.0",
+		"eslint": "^6.8.0",
 		"glob": "^7.1.6",
 		"mocha": "^7.1.2",
 		"typescript": "^3.8.3",

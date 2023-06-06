@@ -35,6 +35,10 @@
 $co-border: #8f8f8f;
 $width: rem(300px);
 
+@media only screen and (max-width:1234px) {
+	div { padding: 0; }
+}
+
 /*
  * body data
 */
@@ -51,11 +55,16 @@ body {
 	height: 100%;
 	background: url(/* asdf */"aaa//sss"); // app style "aaa//sss"
 
+&:hover a {
+padding: 5px
+5px;
+}
+
 	// app style
-	.app:hover {
+	.app:hover,  .pc div {
 		width: 100%;
-		height: auto;
-		overflow: hidden;
+		height : auto;
+		overflow : hidden;
 		overflow-y: auto;
 
 		input {

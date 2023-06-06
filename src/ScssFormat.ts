@@ -16,7 +16,7 @@ export default class SassFormat {
 	scssKeyMaxLen = 0;
 
 	constructor() {
-		for(var i = 0; i < this.scssKeys.length; ++i) {
+		for (var i = 0; i < this.scssKeys.length; ++i) {
 			this.scssKeyMaxLen = Math.max(this.scssKeyMaxLen, this.scssKeys[i].length);
 		}
 	}
@@ -147,14 +147,14 @@ export default class SassFormat {
 		var isInnerKey = false;
 		for (var i = 0; i < text.length; ++i) {
 			var ch = text.charAt(i);
-			if (esc) {
-				if (this.isHead(rst)) {
-					rst += strTab;
-				}
-				rst += ch;
-				esc = false;
-				continue;
-			}
+			// if (esc) {
+			// 	if (this.isHead(rst)) {
+			// 		rst += strTab;
+			// 	}
+			// 	rst += ch;
+			// 	esc = false;
+			// 	continue;
+			// }
 			if (markStart) {
 				if (this.isHead(rst)) {
 					rst += strTab;
@@ -163,6 +163,7 @@ export default class SassFormat {
 				if (ch == markStart) {
 					markStart = "";
 				}
+				lastCh = ch;
 				continue;
 			}
 			if (com1Start) {
@@ -173,6 +174,7 @@ export default class SassFormat {
 				if (ch == "\n") {
 					com1Start = false;
 				}
+				lastCh = ch;
 				continue;
 			}
 			if (com2Start) {
@@ -186,6 +188,7 @@ export default class SassFormat {
 						isAddEndlAuto = true;
 					}
 				}
+				lastCh = ch;
 				continue;
 			}
 			switch (ch) {
@@ -195,7 +198,7 @@ export default class SassFormat {
 					// isImport = false;
 					// isBody = true;
 					rst = rst.replace(new RegExp(keyEndl, "ig"), endl);
-					if(isScssKey) {
+					if (isScssKey) {
 						rst = rst.replace(new RegExp(keySpace, "ig"), " ");
 					} else {
 						rst = rst.replace(new RegExp(keySpace, "ig"), "");
@@ -203,7 +206,10 @@ export default class SassFormat {
 					isScssKey = false;
 					isInnerKey = false;
 					isRtn = false;
-					rst += " " + ch;
+					if (this.lastChar(rst) != " ") {
+						rst += " ";
+					}
+					rst += ch;
 					// pre line is attr line, end with ';'
 					// start in new line
 					var mat = rst.match(/; [^{\n;]+\{$/i);
@@ -212,8 +218,9 @@ export default class SassFormat {
 						rst += endl + endl + strTab + mat[0].substr(2);
 					}
 					if (lastCh != "\n") {
-						if(isFunc) {
+						if (isFunc) {
 							rst += endl;
+							isFunc = false;
 						} else {
 							rst += keyEndl;
 						}
@@ -255,6 +262,7 @@ export default class SassFormat {
 				case "\n": {
 					// pre line is end with '}'
 					// remove empty line
+					// console.info(isAddEndlAuto, this.isHead(rst), rst.substr(rst.length - 1), this.isHead(rst), !/\}\n$/i.test(rst));
 					if (!isAddEndlAuto && this.isHead(rst) && !/\}\n$/i.test(rst)) {
 						rst += endl;
 					} else {
@@ -262,6 +270,8 @@ export default class SassFormat {
 						// 	rst += endl;
 						// }
 					}
+					// console.info(rst);
+					// console.info("---");
 					isAddEndlAuto = false;
 					break;
 				}
@@ -286,15 +296,15 @@ export default class SassFormat {
 						++i;
 					} else if (text.charAt(i + 1) == "*") {
 						// note start with "/*"
-						var idx2 = text.indexOf("*/", i+2);
+						var idx2 = text.indexOf("*/", i + 2);
 						var isMulti = false;
-						if(idx2 > 0) {
+						if (idx2 > 0) {
 							isMulti = (text.substring(i, idx2).indexOf("\n") >= 2);
 						}
 						// if (this.lastChar(rst) == ";") {
 						// 	rst += " ";
 						// }
-						if(isMulti && !isHeadTmp) {
+						if (isMulti && !isHeadTmp) {
 							// console.info("------------");
 							// console.info(this.isHead(rst), rst + "---");
 							rst += endl + strTab;
@@ -307,55 +317,62 @@ export default class SassFormat {
 					}
 					break;
 				}
-				case "\t": {
-					if (isAttrVal || isScssKey || isRtn) {
-						if (this.lastChar(rst) == " ") {
-							break;
-						}
-						if(isRtn) {
-							rst += " ";
-						} else {
-							rst += keySpace;
-						}
+				// case "\t": {
+				// 	if (isAttrVal || isScssKey || isRtn) {
+				// 		if (this.lastChar(rst) == " ") {
+				// 			break;
+				// 		}
+				// 		if (isRtn) {
+				// 			rst += " ";
+				// 		} else {
+				// 			rst += keySpace;
+				// 		}
+				// 		continue;
+				// 	}
+				// 	break;
+				// }
+				case "\t":
+				case " ": {
+					// if (isAttrVal || isScssKey || isRtn) {
+					// 	if (this.lastChar(rst) == " ") {
+					// 		break;
+					// 	}
+					// 	if (isRtn) {
+					// 		rst += " ";
+					// 	} else {
+					// 		rst += keySpace;
+					// 	}
+					// 	continue;
+					// }
+					// break;
+					if (this.lastChar(rst) == " " || this.isHead(rst)) {
 						continue;
 					}
-					break;
-				}
-				case " ": {
-					if (isAttrVal || isScssKey || isRtn) {
-						// if(isScssKey) {
-						// 	console.info("------");
-						// 	console.info(rst);
-						// }
-						if (this.lastChar(rst) == " ") {
-							break;
-						}
-						if(isRtn) {
-							rst += " ";
-						} else {
-							rst += keySpace;
-						}
-						break;
-					}
-					break;
+					// if (isRtn) {
+					// 	rst += " ";
+					// } else {
+					// 	rst += keySpace;
+					// }
+					rst += " ";
+					continue;
 				}
 				case ";": {
 					isAttrVal = false;
 					rst = rst.replace(new RegExp(keySpace, "ig"), " ");
 					rst += ch;
-					if(isScssKey && !isInnerKey) {
+					if (isScssKey && !isInnerKey) {
 						rst += endl;
 						isAddEndlAuto = true;
 						// isImport = false;
 					}
 					// keep in new line, if attr is variable and it is in new line
-					if(/\$[^$:;]+:[^$:;]+;$/.test(rst)) {
-						for(var j = i + 1; j < text.length; ++j) {
+					if (/\$[^$:;]+:[^$:;]+;$/.test(rst)) {
+						for (var j = i + 1; j < text.length; ++j) {
 							var ch2 = text.charAt(j);
-							if(ch2 == "\t" || ch2 == " ") {
+							if (ch2 == "\t" || ch2 == " ") {
 								continue;
 							}
-							if(ch2 == "\n") {
+							if (ch2 == "\n") {
 								rst += endl;
 								isAddEndlAuto = true;
 								break;
@@ -374,18 +391,18 @@ export default class SassFormat {
 					break;
 				}
 				default: {
-					if(ch == "@") {
-						for(var j = 0; j < this.scssKeys.length; ++j) {
+					if (ch == "@") {
+						for (var j = 0; j < this.scssKeys.length; ++j) {
 							var len = this.scssKeys[j].length;
-							if(text.substr(i, len) == this.scssKeys[j]) {
+							if (text.substr(i, len) == this.scssKeys[j]) {
 								isScssKey = true;
 								isAttrVal = true;
-								if(this.scssKeys[j] == "@return") {
+								if (this.scssKeys[j] == "@return") {
 									isRtn = true;
-								} else if(this.scssKeys[j] == "@function") {
+								} else if (this.scssKeys[j] == "@function" || this.scssKeys[j] == "@mixin") {
 									isFunc = true;
 								}
-								if(this.scssKeys[j] in this.mapInnerKey) {
+								if (this.scssKeys[j] in this.mapInnerKey) {
 									isInnerKey = true;
 								}
 								break;
@@ -402,6 +419,9 @@ export default class SassFormat {
 					if (this.lastChar(rst) == ";") {
 						rst += " ";
 					}
+					if (lastCh == "\n" && this.lastChar(rst) != " " && this.lastChar(rst) != "\t") {
+						rst += " ";
+					}
 					rst += ch;
 					break;
 				}
@@ -410,10 +430,10 @@ export default class SassFormat {
 		}
 		rst = rst.replace(new RegExp(keyEndl, "ig"), "");
 		rst = rst.replace(new RegExp(keySpace, "ig"), "");
-		if(lastCh != "\n") {
+		if (lastCh != "\n") {
 			rst = rst.replace(/}\n$/i, "}");
 		}
-		if(endl != this.endl) {
+		if (endl != this.endl) {
 			rst = rst.replace(/\n/i, this.endl);
 		}
 		// if(!this.isHead(rst)) {

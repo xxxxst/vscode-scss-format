@@ -35,7 +35,7 @@
 $co-border: #8f8f8f;
 $width: rem(300px);
 
-@media only screen and (max-width:1234px) {
+@media only screen and (max-width: 1234px), (min-resolution: 150dpi) {
 	div { padding: 0; }
 }
 
@@ -55,13 +55,14 @@ body {
 	height: 100%;
 	background: url(/* asdf */"aaa//sss"); // app style "aaa//sss"
 
-&:hover a {
-padding: 5px
-5px;
+&
+:hover a {
+border: 1px
+solid #fff;
 }
 
 	// app style
-	.app:hover,  .pc div {
+	.app:hover,  .pc #id {
 		width: 100%;
 		height : auto;
 		overflow : hidden;
@@ -70,18 +71,20 @@ padding: 5px
 		input {
 			border: 0;
 			background: transparent;
+			font-family:'Courier New', Courier, monospace;
 		}
 
 		area {
 			$co-border: #8f8f8f;
 			$width: rem(300px);
 			$w: 80px;
+			background-image: url("aa/b b/barn.jpg");
 			padding: 5px 5px 5px 5px;
 			transform: scale(0.3);
 			@extend input;
 			@extend %ex-no-select;
 			@include scrollbar(rem($w));
-			&:hover { color: #f00; }
+			&:hover { color: rgb(255, 0, 0); }
 		}
 	}
 }

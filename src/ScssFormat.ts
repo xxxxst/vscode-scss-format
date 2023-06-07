@@ -386,6 +386,18 @@ export default class SassFormat {
 					break;
 				}
 				case ":": {
+					for (var j = rst.length - 1; j >= 0; --j) {
+						if (lastCh == ":") {
+							break;
+						}
+						var ch3 = rst.charAt(j);
+						if (ch3 != " " && ch3 != "\t" && ch3 != "\n") {
+							if (j < rst.length - 1) {
+								rst = rst.substr(0, j + 1);
+							}
+							break;
+						}
+					}
 					isAttrVal = true;
 					rst += ch + keySpace;
 					break;
@@ -413,13 +425,13 @@ export default class SassFormat {
 						// }
 					}
 					// console.info(ch, this.isHead(rst), rst);
+					if (lastCh == "\n" && this.lastChar(rst) != " " && this.lastChar(rst) != "\t" && !this.isHead(rst)) {
+						rst += " ";
+					}
 					if (this.isHead(rst)) {
 						rst += strTab;
 					}
 					if (this.lastChar(rst) == ";") {
-						rst += " ";
-					}
-					if (lastCh == "\n" && this.lastChar(rst) != " " && this.lastChar(rst) != "\t") {
 						rst += " ";
 					}
 					rst += ch;

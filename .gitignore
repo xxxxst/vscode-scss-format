@@ -1,6 +1,7 @@
-out
+
+/out
 node_modules
 .vscode-test/
-*.vsix
-
-/test.format.scss
+/*.vsix
+/*.zip
+/test.*.scss
